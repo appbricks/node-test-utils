@@ -20,7 +20,7 @@ export default class ActionTester<S = any> {
   private initialState: S | any;;
   private expectActions: ActionLink<S>[];
 
-  hasErrors: boolean;
+  error?: any;
 
   constructor(
     logger: Logger,
@@ -30,7 +30,6 @@ export default class ActionTester<S = any> {
 
     this.initialState = initialState;
     this.expectActions = [];
-    this.hasErrors = false;
   }
 
   expectAction<P>(
@@ -56,8 +55,14 @@ export default class ActionTester<S = any> {
   // have been processed (counted)
   async done(): Promise<void> {
     const tester = this;
+
     let timer = execAfter(
-      () => !this.hasErrors && this.expectActions.length > 0,
+      () => {
+        if (tester.error) {
+          throw tester.error;
+        }
+        return tester.expectActions.length > 0;
+      },
       100, true
     );
     await timer.promise;
@@ -129,8 +134,7 @@ export default class ActionTester<S = any> {
         return state;
 
       } catch (err) {
-        tester.logger.error('Test reducer failed with', err);
-        tester.hasErrors = true;
+        tester.error = err;
       }
       return state;
     }
