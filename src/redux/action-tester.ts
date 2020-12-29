@@ -20,7 +20,7 @@ export default class ActionTester<S = any> {
   private initialState: S | any;;
   private expectActions: ActionLink<S>[];
 
-  error?: any;
+  private hasErrors: boolean = false;
 
   constructor(
     logger: Logger,
@@ -49,23 +49,6 @@ export default class ActionTester<S = any> {
     );
     this.expectActions.push(link);
     return link;
-  }
-
-  // wait until all the test events
-  // have been processed (counted)
-  async done(): Promise<void> {
-    const tester = this;
-
-    let timer = execAfter(
-      () => {
-        if (tester.error) {
-          throw tester.error;
-        }
-        return tester.expectActions.length > 0;
-      },
-      100, true
-    );
-    await timer.promise;
   }
 
   reducer(): Reducer<S, Action> {
@@ -134,10 +117,28 @@ export default class ActionTester<S = any> {
         return state;
 
       } catch (err) {
-        tester.error = err;
+        tester.logger.error('Test reducer failed with', err);
+        tester.hasErrors = true;
       }
       return state;
     }
+  }
+
+  // wait until all the test events
+  // have been processed (counted)
+  async done(): Promise<void> {
+    const tester = this;
+
+    let timer = execAfter(
+      () => {
+        if (tester.hasErrors) {
+          throw('Expected action stream tests failed. See errors above...');
+        }
+        return tester.expectActions.length > 0;
+      },
+      100, true
+    );
+    await timer.promise;
   }
 }
 
