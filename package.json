@@ -1,6 +1,6 @@
 {
   "name": "@appbricks/test-utils",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Node Typescript Module Template",
   "main": "lib/index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/appbricks/node-test-utils",
   "dependencies": {
-    "@appbricks/utils": "0.0.6",
+    "@appbricks/utils": "0.0.10",
     "redux-observable": "^1.2.0",
     "rxjs": "^6.6.7"
   },
