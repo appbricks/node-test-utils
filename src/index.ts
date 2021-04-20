@@ -1,3 +1,3 @@
-import ActionTester from './redux/action-tester'; 
+import ActionTester, { testActionDispatcher } from './redux/action-tester'; 
 import StateTester from './redux/state-tester';
 export { ActionTester, StateTester };

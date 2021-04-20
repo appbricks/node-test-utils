@@ -1,11 +1,25 @@
-import { Reducer } from 'redux';
+import { 
+  Reducer, 
+  Store,
+  Dispatch,
+  combineReducers, 
+  createStore, 
+  applyMiddleware
+} from 'redux';
+import { 
+  Epic,
+  createEpicMiddleware 
+} from 'redux-observable';
+
 import {
   Logger,
+  reduxLogger,
   execAfter,
   SUCCESS,
   ERROR,
   Action,
   ErrorPayload,
+  combineEpicsWithGlobalErrorHandler
 } from '@appbricks/utils';
 
 export default class ActionTester<S = any> {
@@ -280,3 +294,27 @@ class ActionLink<S> {
     return link;
   }
 }
+
+export function testActionDispatcher<P>(
+  actionTester: ActionTester,
+  epics: Epic[],
+  dispatchProps: (dispatch: Dispatch) => P,
+): P {
+
+  const rootReducer = combineReducers({
+    auth: actionTester.reducer()
+  })
+  
+  const epicMiddleware = createEpicMiddleware();
+  store = createStore(
+    rootReducer,
+    applyMiddleware(reduxLogger, epicMiddleware)
+  );
+  
+  const rootEpic = combineEpicsWithGlobalErrorHandler(epics)
+  epicMiddleware.run(rootEpic);
+
+  return dispatchProps(store.dispatch);
+}
+
+export var store: any | undefined = undefined;
