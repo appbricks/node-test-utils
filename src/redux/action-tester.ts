@@ -296,13 +296,14 @@ class ActionLink<S> {
 }
 
 export function testActionDispatcher<P>(
+  statePropertyName: string,
   actionTester: ActionTester,
   epics: Epic[],
   dispatchProps: (dispatch: Dispatch) => P,
 ): P {
 
   const rootReducer = combineReducers({
-    auth: actionTester.reducer()
+    [statePropertyName]: actionTester.reducer()
   })
   
   const epicMiddleware = createEpicMiddleware();
