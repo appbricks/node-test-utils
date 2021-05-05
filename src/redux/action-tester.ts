@@ -49,9 +49,9 @@ export default class ActionTester<S = any> {
   expectAction<P>(
     type: string,
     payload?: P,
-    actionValidator = nullValidator
+    actionValidator: ActionValidator<S, P> = nullValidator
   ): ActionLink<S> {
-    const link = new ActionLink(
+    const link = new ActionLink<S>(
       <Action<P>>{
         type,
         payload,
@@ -158,15 +158,15 @@ export default class ActionTester<S = any> {
 
 type ActionValidator<S = any, T = any> = (
   counter: number,
-  state: S | any,
+  state: S,
   action: Action<T>
-) => S | any;
+) => S;
 
 const nullValidator: ActionValidator = (counter, state, action): any => {
   return state;
 }
 
-class ActionLink<S> {
+class ActionLink<S = any> {
 
   seen: boolean
   action: Action
