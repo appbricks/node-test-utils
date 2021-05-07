@@ -1,6 +1,6 @@
 {
   "name": "@appbricks/test-utils",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Node Typescript Module Template",
   "main": "lib/index.js",
   "scripts": {

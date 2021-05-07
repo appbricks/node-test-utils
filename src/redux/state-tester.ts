@@ -56,12 +56,14 @@ export default class StateTester<S extends State = any> {
         return;
       }
 
+      let stateTest: StateTest<S> | undefined;
       try {
-        const stateTest = tester.expectStates.shift();
+        stateTest = tester.expectStates.shift();
         if (!!!stateTest) {
           fail(`Encountered state changes greater than the expected number of state changes at iteration ${tester.counter}.`);
         }
 
+        this.logger.trace(`Expected action for state change ${this.counter}:`, stateTest.lastActionType, stateTest.lastStatusResult);
         if (stateTest.counter) {
           expect(tester.counter).toEqual(stateTest.counter);
         }
@@ -80,7 +82,16 @@ export default class StateTester<S extends State = any> {
         }
 
       } catch (err) {
-        tester.logger.error(`State change test iteration ${this.counter} failed at state:`, state);
+        tester.logger.error(
+          `State change test iteration ${this.counter} failed at state:`, state);
+        if (!!stateTest) {
+          tester.logger.error(
+            `Expected action for state change @ test iteration ${this.counter}:`, 
+            stateTest);
+          tester.logger.error(
+            `Remaining expected action stack @ test iteration ${this.counter}:`, 
+            this.expectStates);
+        }
         tester.logger.error('State change test failed with', err);
         this.hasErrors = true;
       }
