@@ -7,7 +7,8 @@
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --quiet --fix",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "publish": "tsc && npm publish --access public"
   },
   "repository": {
     "type": "git",
