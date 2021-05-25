@@ -1,14 +1,13 @@
 {
   "name": "@appbricks/test-utils",
-  "version": "0.0.16",
+  "version": "0.0.18",
   "description": "Unit test helper utilities",
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --quiet --fix",
     "build": "tsc",
-    "test": "jest",
-    "publish": "tsc && npm publish --access public"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
