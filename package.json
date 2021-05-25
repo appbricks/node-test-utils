@@ -1,6 +1,6 @@
 {
   "name": "@appbricks/test-utils",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Unit test helper utilities",
   "main": "lib/index.js",
   "scripts": {
@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/appbricks/node-test-utils",
   "dependencies": {
-    "@appbricks/utils": "0.0.15",
+    "@appbricks/utils": "0.0.16",
     "redux-observable": "^1.2.0",
     "rxjs": "^6.6.7"
   },
