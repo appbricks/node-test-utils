@@ -31,7 +31,7 @@ export default class ActionTester<S = any> {
   successCounter: number = 0;
   errorCounter: number = 0;
 
-  private initialState: S | any;;
+  private initialState: S | any;
   private expectActions: ActionLink<S>[];
 
   private hasErrors: boolean = false;
@@ -304,7 +304,7 @@ export function testActionDispatcher<P>(
 
   const rootReducer = combineReducers({
     [statePropertyName]: actionTester.reducer()
-  })
+  });
   
   const epicMiddleware = createEpicMiddleware();
   store = createStore(
