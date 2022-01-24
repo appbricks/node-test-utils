@@ -21,13 +21,19 @@ export default class StateTester<S extends State = any> {
     this.expectStates = [];
   }
 
-  expectState(counter: number, state?: S) {
-    this.expectStates.push(<StateTest>{ counter, state });
+  expectState(numStateChangesToSkip: number, state?: S, test?: ExpectTest<S>) {
+    this.expectStates.push(
+      <StateTest>{ 
+        counter: numStateChangesToSkip - 1, 
+        state,
+        test
+      }
+    );
   }
 
   expectStateTest(
     lastActionType: string,
-    lastStatusResult: ActionResult,
+    lastStatusResult?: ActionResult,
     test?: ExpectTest<S>
   ) {
     this.expectStates.push(
@@ -50,9 +56,10 @@ export default class StateTester<S extends State = any> {
 
       if (tester.expectStates.length > 0 && 
         tester.expectStates[0].counter &&
-        tester.expectStates[0].counter < tester.counter) {
+        tester.expectStates[0].counter > 0) {
         
-        this.logger.trace(`Skipping test iteration ${this.counter} until iteration ${tester.expectStates[0].counter}...`)
+        this.logger.trace(`Skipping test iteration ${this.counter} until iteration ${tester.expectStates[0].counter + this.counter}...`)
+        tester.expectStates[0].counter--;
         return;
       }
 
@@ -60,7 +67,7 @@ export default class StateTester<S extends State = any> {
       try {
         stateTest = tester.expectStates.shift();
         if (!!!stateTest) {
-          fail(`Encountered state changes greater than the expected number of state changes at iteration ${tester.counter}.`);
+          throw new Error(`Encountered state changes greater than the expected number of state changes at iteration ${tester.counter}.`);
         }
 
         this.logger.trace(`Expected action for state change ${this.counter}:`, stateTest.lastActionType, stateTest.lastStatusResult);
