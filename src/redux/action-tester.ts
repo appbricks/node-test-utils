@@ -93,7 +93,11 @@ export default class ActionTester<S = any> {
         expect(expectAction).toBeDefined();
         expect(action.type).toEqual(expectAction.type);
         if (link.actionValidator == nullValidator) {
-          expect(action.payload).toEqual(expectAction.payload);
+          if (action.payload && expectAction.payload) {
+            expect(action.payload).toMatchObject(expectAction.payload);
+          } else {
+            expect(action.payload).toEqual(expectAction.payload);
+          }          
         }
 
         switch (action.type) {
